@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, hotpink, orange);
+        }
+
+        .invoice-container {
+            width: 60%;
+            margin: 50px auto;
+            background-color: lightblue;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .invoice-header, .invoice-summary, .invoice-actions {
+            margin: 20px 0;
+        }
+
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .invoice-table th, .invoice-table td {
+            border: 1px solid whitesmoke;
+            padding: 35px;
+            text-align: left;
+        }
+
+        .invoice-actions {
+            text-align: center;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button#cancel-btn {
+            background-color: #d9534f;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .payment-options {
+            margin-top: 20px;
+        }
+
+        .payment-method {
+            display: inline-block;
+            margin-right: 20px;
+        }
+        nav {
+    position: absolute; 
+    top: 0;
+    right: 0; 
+        }
+
+nav a {
+    color: white; 
+}
+
+nav a:hover {
+    text-decoration: underline; 
+    color: black;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0; 
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 15px;
+}
+
+
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="products.html">Products</a></li>
+            <li><a href="Invoice.html">Check Out</a></li>
+            <li><a href="About Us.html">About</a></li>
+            <li><a href="index.html" > Sign In </a></li>
+            
+        </ul>
+    </nav>
+
+    <div class="invoice-container">
+        <h1>Invoice</h1>
+
+        <div class="invoice-header">
+            <p><strong>Date:</strong> <span id="invoice-date"></span></p>
+        </div>
+
+        <table class="invoice-table">
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody id="invoice-body">
+                <!-- Dynamic rows will be inserted here -->
+            </tbody>
+        </table>
+
+        <div class="invoice-summary">
+            <p><strong>Subtotal:</strong> $<span id="subtotal">0.00</span></p>
+            <p><strong>Tax (15%):</strong> $<span id="tax">0.00</span></p>
+            <p><strong>Total:</strong> $<span id="total">0.00</span></p>
+        </div>
+
+        <div class="payment-options">
+            <h3>Select Payment Method:</h3>
+            <label class="payment-method">
+                <input type="radio" name="payment-method" value="card" checked> Credit/Debit Card
+            </label>
+            <label class="payment-method">
+                <input type="radio" name="payment-method" value="paypal"> PayPal
+            </label>
+            <label class="payment-method">
+                <input type="radio" name="payment-method" value="cashapp"> CashApp
+            </label>
+        </div>
+
+        <div class="invoice-actions">
+            <button id="pay-btn">Pay Now</button>
+            <button id="cancel-btn">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const invoiceDate = document.getElementById("invoice-date");
+            const invoiceBody = document.getElementById("invoice-body");
+            const subtotalEl = document.getElementById("subtotal");
+            const taxEl = document.getElementById("tax");
+            const totalEl = document.getElementById("total");
+
+            // Get the cart data from localStorage
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+            let subtotal = 0;
+
+            // Set today's date
+            const today = new Date().toLocaleDateString();
+            invoiceDate.textContent = today;
+
+            // Generate the invoice rows dynamically
+            cart.forEach(product => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${product.product}</td>
+                    <td>${product.quantity}</td>
+                    <td>$${product.price.toFixed(2)}</td>
+                    <td>$${(product.quantity * product.price).toFixed(2)}</td>
+                `;
+                invoiceBody.appendChild(row);
+                subtotal += product.quantity * product.price;
+            });
+
+            // Calculate tax and total
+            const tax = subtotal * 0.15;
+            const total = subtotal + tax;
+
+            subtotalEl.textContent = subtotal.toFixed(2);
+            taxEl.textContent = tax.toFixed(2);
+            totalEl.textContent = total.toFixed(2);
+
+            // Handle Pay Now button
+            document.getElementById("pay-btn").addEventListener("click", function() {
+                const selectedPaymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
+                
+                if (selectedPaymentMethod === 'card') {
+                    alert("Proceeding with Credit/Debit Card payment...");
+                } else if (selectedPaymentMethod === 'paypal') {
+                    alert("Redirecting to PayPal...");
+                } else if (selectedPaymentMethod === 'cashapp') {
+                    alert("Proceeding with CashApp payment...");
+                } else {
+                    alert("Please select a payment method.");
+                }
+            });
+
+            // Handle Cancel button
+            document.getElementById("cancel-btn").addEventListener("click", function() {
+                alert("Order canceled.");
+            });
+        });
+    </script>
+</body>
+</html>

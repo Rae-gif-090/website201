@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background: linear-gradient(to bottom, hotpink, orange);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-container {
+            border: 2px solid pink;
+            border-radius: 10px;
+            padding: 20px;
+            width: 300px;
+            text-align: center;
+        }
+
+        form h3 {
+            color: white;
+        }
+
+        label {
+            display: block;
+            color: white;
+            margin: 10px 0 5px;
+        }
+
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px transparent;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: pink;
+            color: white;
+            font-family: 'Times New Roman', Times, serif;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #ff6600;
+        }
+
+        #error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <form id="loginForm" method="post" onsubmit="return validateForm(event)"> 
+            <h3>CROCHETZ</h3>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit">Login</button>
+            <div id="error-message"></div> <!-- Error message display -->
+        </form>
+    </div>
+
+    <script>
+        const validUsername = "User123";
+        const validPassword = "Password123";
+        let loginAttempts = 0;
+
+        function validateForm(event) {  // Added event parameter to prevent form submission
+            event.preventDefault(); // Prevents the form from submitting in the traditional way
+
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            const errorMessage = document.getElementById("error-message");
+
+            errorMessage.textContent = ""; // Clear previous error messages
+
+            // Validate password length
+            if (password.length < 8) {
+                errorMessage.textContent = "Password must be at least 8 characters long.";
+                return false;
+            }
+
+            // Check username and password
+            if (username === validUsername && password === validPassword) {
+                window.location.href = "../Codes/Products.html"; // Redirect upon successful login
+                return true;
+            } else {
+                loginAttempts++;
+                errorMessage.textContent = "Incorrect username or password.";
+            }
+
+            // Redirect to error page after 3 failed attempts
+            if (loginAttempts >= 3) {
+                window.location.href = "../Codes/error.html"; // Redirect to error page
+            }
+
+            return false; // Prevent further actions
+        }
+    </script>
+
+</body>
+</html>
